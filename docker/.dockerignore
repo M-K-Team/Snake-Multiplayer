@@ -3,3 +3,4 @@ build
 design/
 .cmd
 .DS_Store
+.github

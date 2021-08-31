@@ -1,0 +1,33 @@
+name: Deploy to Heroku
+
+on: 
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build Docker image
+      run: docker build -t deployment-image -f ./docker/Dockerfile .
+    - name: Login to Heroku Container registry
+      env: 
+        HEROKU_API_KEY: ${{ secrets.HEROKU_MICHAL_API_KEY }}
+      run:  docker login --username=_ --password=$HEROKU_API_KEY registry.heroku.com
+    - name: Tag image
+      env: 
+        APP_NAME: ${{ secrets.HEROKU_SNAKE_APP_NAME }}
+      run: docker tag deployment-image registry.heroku.com/$APP_NAME/web
+    - name: Push to Heroku
+      env: 
+        APP_NAME: ${{ secrets.HEROKU_SNAKE_APP_NAME }}
+      run: docker push registry.heroku.com/$APP_NAME/web
+    - name: Release container on Heroku
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_MICHAL_API_KEY }}
+        APP_NAME: ${{ secrets.HEROKU_SNAKE_APP_NAME }}
+      run: |
+        heroku container:login
+        heroku container:release -a $APP_NAME web

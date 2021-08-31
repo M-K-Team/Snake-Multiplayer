@@ -1,0 +1,12 @@
+{
+  "name": "snake-multiplayer-backend",
+  "version": "1.0.0",
+  "authors": "Michał Pękal, Jakub Mrówczyński",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
